@@ -34,7 +34,8 @@ var window: UIWindow?
 //        if let tokenContainer = try? tokenStorage.getToken(), !tokenContainer.isExpired {
 //            goToMain()
 //
-        goToMain()
+        gotoSingUp()
+       // goToMain()
             //TODO: - auth
         //}
         
@@ -52,6 +53,12 @@ var window: UIWindow?
     
     }
 
+    func gotoSingUp(){
+        DispatchQueue.main.async {
+            let singUpVC = LaunchViewController()
+            self.window?.rootViewController = singUpVC
+        }
+    }
 
 
 }

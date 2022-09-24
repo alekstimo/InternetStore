@@ -11,11 +11,16 @@ class ProfileViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .green
+        
         // Do any additional setup after loading the view.
     }
 
-
+    @IBAction func exitButtonTappet(_ sender: Any) {
+        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let vc = LaunchViewController()
+        appDelegate.window?.rootViewController = vc
+    }
+    
     /*
     // MARK: - Navigation
 
