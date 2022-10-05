@@ -7,8 +7,12 @@
 
 import Foundation
 import UIKit
+import RealmSwift
 
 class TabBarUserConfigurator {
+    
+    let realm = try! Realm()
+    lazy var users: Results<User> = { self.realm.objects(User.self) }()
     
     // MARK: - Private property
     private let allTab: [TabBarModelUser] = [.main, .cart, .profile]
@@ -53,7 +57,15 @@ private extension TabBarUserConfigurator {
         case .cart:
             return CartViewController()
         case .profile:
-            return ProfileViewController()
+            let tmpLogin = UserSettings.userName ?? " "
+            let tmpPassword = UserSettings.password ?? " "
+            for user in users {
+                if user.login == tmpLogin && user.password == tmpPassword {
+                      return ProfileViewController()
+                    }
+                }
+            return LaunchViewController()
+            
         }
     }
 }

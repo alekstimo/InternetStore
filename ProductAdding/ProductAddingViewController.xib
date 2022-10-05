@@ -10,6 +10,14 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProductAddingViewController" customModule="InternetStore" customModuleProvider="target">
             <connections>
+                <outlet property="addButton" destination="Z3u-EL-NOt" id="ehS-w5-oyA"/>
+                <outlet property="category" destination="pCw-VS-iWj" id="fb0-C0-J9Q"/>
+                <outlet property="key" destination="3TA-Bs-0P1" id="1CK-Lf-BB9"/>
+                <outlet property="picture" destination="1VK-vP-YES" id="b9r-UW-63S"/>
+                <outlet property="price" destination="6CW-aO-vd0" id="lEk-D4-I1f"/>
+                <outlet property="productInfo" destination="iQD-Am-05n" id="8LF-GO-XcC"/>
+                <outlet property="productTitle" destination="5zL-O1-xtS" id="Xpa-1f-Kaf"/>
+                <outlet property="provider" destination="9gT-eT-VQ0" id="IyV-dS-LeO"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -17,12 +25,123 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Ключ" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3TA-Bs-0P1">
+                    <rect key="frame" x="20" y="144" width="294" height="34"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <action selector="EditingDidEnd:" destination="-1" eventType="editingDidEnd" id="iEo-kD-AI3"/>
+                    </connections>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Название" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5zL-O1-xtS">
+                    <rect key="frame" x="20" y="208" width="294" height="34"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <action selector="EditingDidEnd:" destination="-1" eventType="editingDidEnd" id="Kgg-Lx-YSt"/>
+                    </connections>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="URL картинки" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="1VK-vP-YES">
+                    <rect key="frame" x="20" y="272" width="294" height="34"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <action selector="EditingDidEnd:" destination="-1" eventType="editingDidEnd" id="hPa-fa-l7Z"/>
+                    </connections>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Цена" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="6CW-aO-vd0">
+                    <rect key="frame" x="20" y="336" width="294" height="34"/>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <action selector="EditingDidEnd:" destination="-1" eventType="editingDidEnd" id="5sc-Ae-yzb"/>
+                    </connections>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Категория" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pCw-VS-iWj">
+                    <rect key="frame" x="20" y="400" width="294" height="34"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <action selector="EditingDidEnd:" destination="-1" eventType="editingDidEnd" id="Omr-pt-QhV"/>
+                        <action selector="categoryEditing:" destination="-1" eventType="editingChanged" id="A4L-Ii-AyR"/>
+                        <action selector="categoryEditingDidBegin:" destination="-1" eventType="editingDidBegin" id="tRB-Bz-QKG"/>
+                    </connections>
+                </textField>
+                <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Производитель" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9gT-eT-VQ0">
+                    <rect key="frame" x="20" y="464" width="294" height="34"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                    <connections>
+                        <action selector="EditingDidEnd:" destination="-1" eventType="editingDidEnd" id="izL-SA-ia3"/>
+                        <action selector="providerEditing:" destination="-1" eventType="editingChanged" id="2SO-yF-YE7"/>
+                        <action selector="providerEditingDidBegin:" destination="-1" eventType="editingDidBegin" id="VK0-Yc-SEJ"/>
+                    </connections>
+                </textField>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z3u-EL-NOt">
+                    <rect key="frame" x="107" y="698" width="200" height="50"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="200" id="Kb8-S9-3jO"/>
+                        <constraint firstAttribute="height" constant="50" id="fYy-0h-5ht"/>
+                    </constraints>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" title="Добавить"/>
+                    <connections>
+                        <action selector="addButtonPushed:" destination="-1" eventType="touchUpInside" id="f1Z-G7-TPt"/>
+                    </connections>
+                </button>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="iQD-Am-05n">
+                    <rect key="frame" x="20" y="528" width="294" height="130"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="130" id="KNJ-6R-bkW"/>
+                    </constraints>
+                    <color key="textColor" systemColor="labelColor"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                </textView>
+            </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" systemColor="systemGray5Color"/>
+            <constraints>
+                <constraint firstItem="iQD-Am-05n" firstAttribute="top" secondItem="9gT-eT-VQ0" secondAttribute="bottom" constant="30" id="2fG-q8-dsw"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="6CW-aO-vd0" secondAttribute="trailing" constant="100" id="5rl-7D-HYQ"/>
+                <constraint firstItem="5zL-O1-xtS" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="8zg-RF-hHJ"/>
+                <constraint firstItem="1VK-vP-YES" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="Dbn-ZB-F3d"/>
+                <constraint firstItem="9gT-eT-VQ0" firstAttribute="top" secondItem="pCw-VS-iWj" secondAttribute="bottom" constant="30" id="F0u-4b-e1d"/>
+                <constraint firstItem="5zL-O1-xtS" firstAttribute="top" secondItem="3TA-Bs-0P1" secondAttribute="bottom" constant="30" id="I2G-vP-Ghi"/>
+                <constraint firstItem="iQD-Am-05n" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="J4g-vE-0bZ"/>
+                <constraint firstItem="Z3u-EL-NOt" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="MOz-nW-bdd"/>
+                <constraint firstItem="1VK-vP-YES" firstAttribute="top" secondItem="5zL-O1-xtS" secondAttribute="bottom" constant="30" id="QOF-Hv-cfE"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="iQD-Am-05n" secondAttribute="trailing" constant="100" id="TD8-AM-5Ha"/>
+                <constraint firstItem="9gT-eT-VQ0" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="VT2-vq-fZB"/>
+                <constraint firstItem="6CW-aO-vd0" firstAttribute="top" secondItem="1VK-vP-YES" secondAttribute="bottom" constant="30" id="Wlt-Wy-zAC"/>
+                <constraint firstItem="pCw-VS-iWj" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="akb-kD-0SA"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="pCw-VS-iWj" secondAttribute="trailing" constant="100" id="cJ1-zZ-oMZ"/>
+                <constraint firstItem="3TA-Bs-0P1" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="100" id="e4p-nQ-zXn"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="1VK-vP-YES" secondAttribute="trailing" constant="100" id="gwa-00-uXe"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="3TA-Bs-0P1" secondAttribute="trailing" constant="100" id="h5F-Vt-qLf"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="9gT-eT-VQ0" secondAttribute="trailing" constant="100" id="oA3-g6-7oZ"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="5zL-O1-xtS" secondAttribute="trailing" constant="100" id="rh5-dI-dy0"/>
+                <constraint firstItem="3TA-Bs-0P1" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="t8a-Yg-Jdq"/>
+                <constraint firstItem="pCw-VS-iWj" firstAttribute="top" secondItem="6CW-aO-vd0" secondAttribute="bottom" constant="30" id="wje-vX-u5N"/>
+                <constraint firstItem="Z3u-EL-NOt" firstAttribute="top" secondItem="iQD-Am-05n" secondAttribute="bottom" constant="40" id="xG0-9v-VVN"/>
+                <constraint firstItem="6CW-aO-vd0" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="xYS-j7-Odf"/>
+            </constraints>
             <point key="canvasLocation" x="139" y="76"/>
         </view>
     </objects>
     <resources>
+        <systemColor name="labelColor">
+            <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
         <systemColor name="systemGray5Color">
             <color red="0.89803921568627454" green="0.89803921568627454" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

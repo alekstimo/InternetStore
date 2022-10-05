@@ -16,8 +16,10 @@ class ProfileViewController: UIViewController {
     }
 
     @IBAction func exitButtonTappet(_ sender: Any) {
+        UserSettings.userName = ""
+        UserSettings.password = ""
         let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let vc = LaunchViewController()
+        let vc = TabBarUserConfigurator().configure()
         appDelegate.window?.rootViewController = vc
     }
     

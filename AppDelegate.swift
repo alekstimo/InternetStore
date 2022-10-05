@@ -6,13 +6,15 @@
 //
 
 import UIKit
-
+import RealmSwift
 
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 var window: UIWindow?
+let realm = try! Realm()
+lazy var users: Results<User> = { self.realm.objects(User.self) }()
     
 //
 //    var tokenStorage: TokenStorage {
@@ -22,7 +24,7 @@ var window: UIWindow?
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        
+       
         startApplicationProccess()
         return true
     }
@@ -30,17 +32,12 @@ var window: UIWindow?
     func startApplicationProccess() {
         
         runLaunchScreen()
-        
-//        if let tokenContainer = try? tokenStorage.getToken(), !tokenContainer.isExpired {
-//            goToMain()
-//
-        gotoSingUp()
-       // goToMain()
+        //gotoSingUp()
+        goToMain()
             //TODO: - auth
         //}
         
     }
-    
     func runLaunchScreen() {
         let launchScreenViewController = UIStoryboard(name: "LaunchScreen", bundle: .main).instantiateInitialViewController()
         window?.rootViewController = launchScreenViewController
@@ -48,6 +45,16 @@ var window: UIWindow?
     
     func goToMain(){
         DispatchQueue.main.async {
+            let tmpLogin = UserSettings.userName ?? " "
+            let tmpPassword = UserSettings.password ?? " "
+            for user in self.users {
+                if user.login == tmpLogin && user.password == tmpPassword {
+                    if user.role == "admin" {
+                        self.window?.rootViewController = TabBarAdminConfigurator().configure()
+                        return
+                    }
+                }
+            }
             self.window?.rootViewController = TabBarUserConfigurator().configure()
         }
     
