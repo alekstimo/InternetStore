@@ -8,10 +8,10 @@
 import UIKit
 import RealmSwift
 
+var currentUser = User()
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
 var window: UIWindow?
 let realm = try! Realm()
 lazy var users: Results<User> = { self.realm.objects(User.self) }()
@@ -49,6 +49,7 @@ lazy var users: Results<User> = { self.realm.objects(User.self) }()
             let tmpPassword = UserSettings.password ?? " "
             for user in self.users {
                 if user.login == tmpLogin && user.password == tmpPassword {
+                    currentUser = user
                     if user.role == "admin" {
                         self.window?.rootViewController = TabBarAdminConfigurator().configure()
                         return

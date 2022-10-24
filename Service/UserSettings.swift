@@ -11,6 +11,7 @@ final class UserSettings {
     private enum SettingsKeys: String {
         case userName
         case password
+       // case user
     }
     
     static var userName: String! {
@@ -40,4 +41,20 @@ final class UserSettings {
             }
         }
     }
+//
+//    static var user: User! {
+//        get{
+//            return UserDefaults.standard.object(forKey: SettingsKeys.user.rawValue) as! User
+//        } set {
+//            let defaults = UserDefaults.standard
+//            let key = SettingsKeys.user.rawValue
+//            if let name = newValue {
+//                print(name)
+//                defaults.setValue(name, forKey: key)
+//                defaults.set(name, forKey: key)
+//            } else {
+//                defaults.removeObject(forKey: key)
+//            }
+//        }
+//    }
 }

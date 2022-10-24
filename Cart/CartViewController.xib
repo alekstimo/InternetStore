@@ -10,6 +10,10 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="CartViewController" customModule="InternetStore" customModuleProvider="target">
             <connections>
+                <outlet property="collectionView" destination="JnW-li-sce" id="kSI-zc-2fQ"/>
+                <outlet property="selectAllLabel" destination="Awu-AJ-DNG" id="UG9-dw-FBv"/>
+                <outlet property="selectButton" destination="B7n-sT-9p9" id="jSu-iU-UCO"/>
+                <outlet property="sumPrice" destination="uPe-Gy-vAk" id="hd5-OD-UtF"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -17,14 +21,80 @@
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
             <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ngq-RE-GAJ">
+                    <rect key="frame" x="82" y="797" width="250" height="50"/>
+                    <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="Hl6-Pz-M4R"/>
+                        <constraint firstAttribute="width" constant="250" id="sXE-fe-YHH"/>
+                    </constraints>
+                    <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" title="Оплатить"/>
+                    <connections>
+                        <action selector="payButtonTouch:" destination="-1" eventType="touchUpInside" id="QIL-Hg-MK0"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uPe-Gy-vAk">
+                    <rect key="frame" x="357" y="766" width="42" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B7n-sT-9p9">
+                    <rect key="frame" x="10" y="764.5" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="kml-eY-RFe"/>
+                        <constraint firstAttribute="width" constant="24" id="lvc-fw-dCF"/>
+                    </constraints>
+                    <state key="normal" title="Button"/>
+                    <buttonConfiguration key="configuration" style="plain" image="nSelected"/>
+                    <connections>
+                        <action selector="selectAllButtonTouch:" destination="-1" eventType="touchUpInside" id="10h-RO-p6H"/>
+                    </connections>
+                </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Awu-AJ-DNG">
+                    <rect key="frame" x="49" y="766" width="42" height="21"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                    <nil key="textColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="JnW-li-sce">
+                    <rect key="frame" x="0.0" y="44" width="414" height="712"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Pf3-uu-2X2">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+            </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <color key="backgroundColor" systemColor="systemGray4Color"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+            <constraints>
+                <constraint firstItem="JnW-li-sce" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="10d-r7-BMj"/>
+                <constraint firstItem="uPe-Gy-vAk" firstAttribute="centerY" secondItem="Awu-AJ-DNG" secondAttribute="centerY" id="9r5-47-vfN"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="JnW-li-sce" secondAttribute="trailing" id="QGR-wb-q0O"/>
+                <constraint firstItem="uPe-Gy-vAk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Awu-AJ-DNG" secondAttribute="trailing" constant="20" id="SSw-y6-aVq"/>
+                <constraint firstItem="B7n-sT-9p9" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="10" id="TPZ-iU-caD"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="uPe-Gy-vAk" secondAttribute="trailing" constant="15" id="Wtz-uQ-SQc"/>
+                <constraint firstItem="Ngq-RE-GAJ" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="YtV-Cj-mYi"/>
+                <constraint firstItem="JnW-li-sce" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="d5x-km-BOJ"/>
+                <constraint firstItem="B7n-sT-9p9" firstAttribute="centerY" secondItem="Awu-AJ-DNG" secondAttribute="centerY" id="f9k-x5-zGk"/>
+                <constraint firstItem="Awu-AJ-DNG" firstAttribute="top" secondItem="JnW-li-sce" secondAttribute="bottom" constant="10" id="k8E-O9-iOf"/>
+                <constraint firstItem="Ngq-RE-GAJ" firstAttribute="top" secondItem="Awu-AJ-DNG" secondAttribute="bottom" constant="10" id="lvr-VX-HSc"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Ngq-RE-GAJ" secondAttribute="bottom" constant="15" id="mxM-NX-L4e"/>
+                <constraint firstItem="Awu-AJ-DNG" firstAttribute="leading" secondItem="B7n-sT-9p9" secondAttribute="trailing" constant="15" id="omf-o7-Roy"/>
+            </constraints>
             <point key="canvasLocation" x="139" y="76"/>
         </view>
     </objects>
     <resources>
-        <systemColor name="systemGray4Color">
-            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <image name="nSelected" width="24" height="24"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
     </resources>
 </document>

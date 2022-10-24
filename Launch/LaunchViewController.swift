@@ -111,6 +111,7 @@ class LaunchViewController: UIViewController, UITextFieldDelegate {
                 }
                 for user in users {
                     if user.login == login && user.password == password {
+                        currentUser = user
                         UserSettings.userName = login
                         UserSettings.password = password
                         if user.role == "admin"{
