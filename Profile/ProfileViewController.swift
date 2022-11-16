@@ -9,15 +9,17 @@ import UIKit
 import RealmSwift
 class ProfileViewController: UIViewController {
     let realm = try! Realm()
-    
     private var user = User()
+    let popVC =  OptionsTableViewController()
     
     // MARK: - Views
     
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
+      //  print(Realm.Configuration.defaultConfiguration.fileURL)
         super.viewDidLoad()
         configureAppearance()
+        NotificationCenter.default.addObserver(self, selector: #selector(purchaseTapped), name: NSNotification.Name("purchaseTapped"), object: nil)
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -35,7 +37,11 @@ class ProfileViewController: UIViewController {
         let vc = TabBarUserConfigurator().configure()
         appDelegate.window?.rootViewController = vc
     }
-    
+    @objc func purchaseTapped(){
+        let vc = PurchseViewController()
+        navigationController?.pushViewController(vc, animated: true)
+        popVC.dismiss(animated: false)
+    }
     
 }
 
@@ -77,6 +83,21 @@ private extension ProfileViewController {
 
     func configureNavigationBar() {
         navigationItem.title = "Профиль"
+        let optionButton = UIBarButtonItem(image:resizeImage(image: UIImage(named: "plus")!, targetSize: CGSize.init(width: 32, height: 32)) ,
+                                         style: .plain, target: self,
+                                           action: #selector(self.optionButtonTapped))
+        navigationItem.rightBarButtonItem = optionButton
+        navigationItem.rightBarButtonItem?.tintColor = .black
+    }
+    @objc func optionButtonTapped(){
+       // print("searchButtonTapped")
+        popVC.modalPresentationStyle = .popover
+        let popOverVc = popVC.popoverPresentationController
+        popOverVc?.delegate = self
+        popOverVc?.sourceView = self.view
+        popOverVc?.sourceRect = CGRect(x: self.view.bounds.maxX, y: self.view.safeAreaInsets.bottom, width: 0, height: 0)
+        popVC.preferredContentSize = CGSize(width: 250, height: 250)
+        self.present(popVC, animated: true)
     }
 
     func configureTableView() {
@@ -101,7 +122,11 @@ private extension ProfileViewController {
     }
 
 }
-
+extension ProfileViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+}
 // MARK: - UITableViewDataSource
 extension ProfileViewController: UITableViewDataSource {
 

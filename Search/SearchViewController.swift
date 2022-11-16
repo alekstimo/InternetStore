@@ -17,7 +17,7 @@ class SearchViewController: UIViewController, UIGestureRecognizerDelegate, UISea
     private var searchBar: UISearchBar = UISearchBar()
     private var filtredModel: MainModel = .init()
     private var model: MainModel = .init() //Для избранного???
-    
+    private var selectedString: String = ""
     
     @IBOutlet var emptyView: UIView!
  
@@ -39,6 +39,10 @@ class SearchViewController: UIViewController, UIGestureRecognizerDelegate, UISea
        
         model.loadPosts()
         filtredModel.loadPosts()
+        if !selectedString.isEmpty {
+            searchBar.text = selectedString
+            searchBar(searchBar, textDidChange: selectedString)
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -61,7 +65,7 @@ class SearchViewController: UIViewController, UIGestureRecognizerDelegate, UISea
             emptyView.removeFromSuperview()
             for item in model.items {
                 
-                if item.title.lowercased().contains(searchText.lowercased()) {
+                if item.title.lowercased().contains(searchText.lowercased()) || item.category.lowercased().contains(searchText.lowercased()) || item.provider.contains(searchText){
                     filtredModel.items.append(item)
                 }
                 
@@ -77,7 +81,9 @@ class SearchViewController: UIViewController, UIGestureRecognizerDelegate, UISea
         self.collectionView.reloadData()
         
     }
-
+    func setSelectedString(str: String){
+        selectedString = str
+    }
     
 
 }

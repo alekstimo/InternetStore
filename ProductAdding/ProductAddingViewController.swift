@@ -20,6 +20,15 @@ class ProductAddingViewController: UIViewController {
     @IBOutlet weak var price: UITextField!
     @IBOutlet weak var category: UITextField!
     @IBOutlet weak var provider: UITextField!
+    
+    private var ptrKey = ""
+    private var ptrProductTitle = ""
+    private var ptrPicture = ""
+    private var ptrProductInfo = ""
+    private var ptrPrice = ""
+    private var ptrCategory = ""
+    private var ptrProvider = ""
+    
     let popVcCategory = CategoryViewController()
     let popVcProvider = ProviderViewController()
     let realm = try! Realm()
@@ -36,18 +45,45 @@ class ProductAddingViewController: UIViewController {
                                            selectedProvider(),
                                            Double(price.text!)!])
              let cat = selectedCategory()
-             print(cat.name)
              self.realm.add(product)
             }
         } //TODO: CATCH Not add
         else {
-            //TODO: Alert key
-            print("Товар с таким ключом уже есть")
+            let alert = UIAlertController(title: "Ошибка!", message: "Товар с таким ключом уже есть! \n Обновить данные этого товара? ", preferredStyle: UIAlertController.Style.alert)
+            let actionUpgrade = UIAlertAction.init(title: "Да", style: .default, handler: { action in
+                try! self.realm.write() {
+                    
+                    var product = Product()
+                    for prod in self.products {
+                        if prod.productKey == self.key.text {
+                            product = prod
+                        }
+                    }
+                    product.provider = self.selectedProvider()
+                    product.category = self.selectedCategory()
+                    product.productTitle =  self.productTitle.text!
+                    product.productPrice = Double(self.price.text!)!
+                    product.productInfo = self.productInfo.text!
+                    product.productPictureUrl = self.picture.text!
+                    
+                    self.realm.add(product)
+                    let alert = UIAlertController(title: "Супер!", message: "Товар успешно добавлен в базу!", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "ОК", style: UIAlertAction.Style.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                }
+            })
+            alert.addAction(actionUpgrade)
+            alert.addAction(UIAlertAction(title: "Отмена", style: UIAlertAction.Style.cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
             return
         }
-        //TODO: Alert success
+        let alert = UIAlertController(title: "Супер!", message: "Товар успешно добавлен в базу!", preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "ОК", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
         clearAllTextField()
     }
+    
+    
     func clearAllTextField(){
         for view in self.view.subviews {
             if let textField = view as? UITextField {
@@ -64,6 +100,18 @@ class ProductAddingViewController: UIViewController {
             }
         }
         return true
+    }
+    func editProduct(productKey: String, info: String, title: String, newCategory: String, newProvider: String, pictUrl: String, NewPrice: Double) {
+        
+        ptrKey = productKey
+        ptrProductInfo = info
+        ptrProductTitle = title
+        ptrCategory = newCategory
+        ptrProvider = newProvider
+        ptrPicture = pictUrl
+        ptrPrice = String(NewPrice)
+        
+        
     }
     func updateAddButtonState(){
         
@@ -165,6 +213,15 @@ class ProductAddingViewController: UIViewController {
         addButton.layer.cornerRadius = 12
         addButton.isEnabled = false
         key.delegate  = self
+        if !ptrKey.isEmpty {
+            key.text = ptrKey
+            productInfo.text = ptrProductInfo
+            productTitle.text = ptrProductTitle
+            category.text = ptrCategory
+            provider.text = ptrProvider
+            picture.text = ptrPicture
+            price.text = ptrPrice
+        }
     }
     
    

@@ -37,31 +37,31 @@
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uPe-Gy-vAk">
-                    <rect key="frame" x="357" y="766" width="42" height="21"/>
+                    <rect key="frame" x="357" y="756" width="42" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B7n-sT-9p9">
-                    <rect key="frame" x="10" y="764.5" width="24" height="24"/>
+                    <rect key="frame" x="10" y="754.5" width="24" height="24"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="24" id="kml-eY-RFe"/>
                         <constraint firstAttribute="width" constant="24" id="lvc-fw-dCF"/>
                     </constraints>
                     <state key="normal" title="Button"/>
-                    <buttonConfiguration key="configuration" style="plain" image="nSelected"/>
+                    <buttonConfiguration key="configuration" style="plain" image="selected"/>
                     <connections>
                         <action selector="selectAllButtonTouch:" destination="-1" eventType="touchUpInside" id="10h-RO-p6H"/>
                     </connections>
                 </button>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Awu-AJ-DNG">
-                    <rect key="frame" x="49" y="766" width="42" height="21"/>
+                    <rect key="frame" x="49" y="756" width="42" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <nil key="textColor"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="JnW-li-sce">
-                    <rect key="frame" x="0.0" y="44" width="414" height="712"/>
+                    <rect key="frame" x="0.0" y="44" width="414" height="692"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="Pf3-uu-2X2">
                         <size key="itemSize" width="128" height="128"/>
@@ -83,8 +83,8 @@
                 <constraint firstItem="Ngq-RE-GAJ" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="YtV-Cj-mYi"/>
                 <constraint firstItem="JnW-li-sce" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="d5x-km-BOJ"/>
                 <constraint firstItem="B7n-sT-9p9" firstAttribute="centerY" secondItem="Awu-AJ-DNG" secondAttribute="centerY" id="f9k-x5-zGk"/>
-                <constraint firstItem="Awu-AJ-DNG" firstAttribute="top" secondItem="JnW-li-sce" secondAttribute="bottom" constant="10" id="k8E-O9-iOf"/>
-                <constraint firstItem="Ngq-RE-GAJ" firstAttribute="top" secondItem="Awu-AJ-DNG" secondAttribute="bottom" constant="10" id="lvr-VX-HSc"/>
+                <constraint firstItem="Awu-AJ-DNG" firstAttribute="top" secondItem="JnW-li-sce" secondAttribute="bottom" constant="20" id="k8E-O9-iOf"/>
+                <constraint firstItem="Ngq-RE-GAJ" firstAttribute="top" secondItem="Awu-AJ-DNG" secondAttribute="bottom" constant="20" id="lvr-VX-HSc"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="Ngq-RE-GAJ" secondAttribute="bottom" constant="15" id="mxM-NX-L4e"/>
                 <constraint firstItem="Awu-AJ-DNG" firstAttribute="leading" secondItem="B7n-sT-9p9" secondAttribute="trailing" constant="15" id="omf-o7-Roy"/>
             </constraints>
@@ -92,7 +92,7 @@
         </view>
     </objects>
     <resources>
-        <image name="nSelected" width="24" height="24"/>
+        <image name="selected" width="24" height="24"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

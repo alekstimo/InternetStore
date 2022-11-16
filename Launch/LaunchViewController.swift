@@ -13,8 +13,7 @@ class LaunchViewController: UIViewController, UITextFieldDelegate {
     let realm = try! Realm()
     lazy var users: Results<User> = { self.realm.objects(User.self) }()
     
-    @IBOutlet weak var adminButton: UIButton!
-    @IBOutlet weak var userButton: UIButton!
+    
     
     @IBOutlet weak var EnterButton: UIButton!
     
@@ -48,7 +47,7 @@ class LaunchViewController: UIViewController, UITextFieldDelegate {
     //TODO: Нажатие кнопки войти и регистрации (переход на экран регистрации)
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        adminButton.titleLabel?.text = "Админ"
+        
         
         if users.count == 0 {
             try! realm.write() {
@@ -140,17 +139,17 @@ class LaunchViewController: UIViewController, UITextFieldDelegate {
         
         
     }
-    @IBAction func userButtonTapped(_ sender: Any) {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let vc = TabBarUserConfigurator().configure()
-        appDelegate.window?.rootViewController = vc
-    }
-    
-    @IBAction func adminButtonTapped(_ sender: Any) {
-        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
-        let vc = TabBarAdminConfigurator().configure()
-        appDelegate.window?.rootViewController = vc
-    }
+//    @IBAction func userButtonTapped(_ sender: Any) {
+//        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+//        let vc = TabBarUserConfigurator().configure()
+//        appDelegate.window?.rootViewController = vc
+//    }
+//
+//    @IBAction func adminButtonTapped(_ sender: Any) {
+//        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+//        let vc = TabBarAdminConfigurator().configure()
+//        appDelegate.window?.rootViewController = vc
+//    }
     
 }
 

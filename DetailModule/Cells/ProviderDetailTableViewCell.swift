@@ -11,11 +11,12 @@ class ProviderDetailTableViewCell: UITableViewCell {
 
     @IBOutlet weak var providerButton: UIButton!
     @IBOutlet weak var providerTextLabel: UILabel!
-    
+    private var providerName = ""
     //MARK: - Properties
     var provider: String = "" {
         didSet {
-            providerButton.setTitle(provider + " >", for: .normal) 
+            providerButton.setTitle(provider + " >", for: .normal)
+            providerName = provider
         }
     }
     
@@ -26,6 +27,7 @@ class ProviderDetailTableViewCell: UITableViewCell {
 
     @IBAction func providerButtonPushed(_ sender: Any) {
         print("Provider productView!")
+        NotificationCenter.default.post(name: NSNotification.Name("searchForSelected"), object: ["str": providerName])
     }
     private func configureApperance() {
         selectionStyle = .none

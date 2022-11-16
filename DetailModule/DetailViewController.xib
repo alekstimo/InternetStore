@@ -21,7 +21,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="mas-ST-7j6">
-                    <rect key="frame" x="0.0" y="0.0" width="414" height="797"/>
+                    <rect key="frame" x="0.0" y="0.0" width="414" height="777"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                 </tableView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lw8-4R-qLW">
@@ -46,7 +46,7 @@
             <constraints>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="mas-ST-7j6" secondAttribute="trailing" id="JvL-Uf-kqf"/>
                 <constraint firstItem="mas-ST-7j6" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="Q96-Dz-fpz"/>
-                <constraint firstItem="lw8-4R-qLW" firstAttribute="top" secondItem="mas-ST-7j6" secondAttribute="bottom" id="Rhy-7p-GIU"/>
+                <constraint firstItem="lw8-4R-qLW" firstAttribute="top" secondItem="mas-ST-7j6" secondAttribute="bottom" constant="20" id="Rhy-7p-GIU"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="lw8-4R-qLW" secondAttribute="bottom" constant="15" id="hFn-R1-hDA"/>
                 <constraint firstItem="lw8-4R-qLW" firstAttribute="centerX" secondItem="fnl-2z-Ty3" secondAttribute="centerX" id="phL-3z-2q6"/>
                 <constraint firstItem="mas-ST-7j6" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="sPl-W3-C2Y"/>

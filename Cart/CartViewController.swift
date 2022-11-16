@@ -9,12 +9,15 @@ import UIKit
 import RealmSwift
 
 class CartViewController: UIViewController {
-
+    
+   
+    let refreshControl = UIRefreshControl()
     let realm = try! Realm()
     var sum: Double = 0.0
-    var isAllSelected: Bool = false
+    var isAllSelected: Bool = true
     var currentStatus = OrderStatus()
     var model: [Purchase] = []
+    var selected: [Bool] = []
 //    lazy var  model: Results<Purchase> = { self.realm.objects(Purchase.self) }()
     @IBOutlet weak var selectButton: UIButton!
     @IBOutlet weak var selectAllLabel: UILabel!
@@ -25,14 +28,53 @@ class CartViewController: UIViewController {
         isAllSelected = !isAllSelected
         if isAllSelected {
             selectButton.setImage(UIImage(named: "selected"), for: .normal)
-            
+            var i=0
+            sum = 0.0
+            for _ in selected {
+                selected[i] = true
+                sum = sum + model[i].price * Double(model[i].count)
+                i+=1
+            }
+            sumPrice.text = String(sum) + "0 р."
         }
         else {
+            var i=0
+            for _ in selected {
+                selected[i] = false
+                i+=1
+                sum = 0.0
+                sumPrice.text = String(sum) + "0 p."
+            }
             selectButton.setImage(UIImage(named: "nSelected"), for: .normal)
         }
         collectionView.reloadData()
     }
     @IBAction func payButtonTouch(_ sender: Any) {
+        let alert = UIAlertController(title: "Оплатить", message: "Оплатить покупку на \(sumPrice.text ?? " ")?", preferredStyle: UIAlertController.Style.alert)
+        let actionUpgrade = UIAlertAction.init(title: "Да", style: .default, handler: { action in
+            let statuses =  self.realm.objects(OrderStatus.self)
+            var stat = OrderStatus()
+            for status in statuses {
+                if status.statusName == "Framed"{
+                    stat = status
+                }
+            }
+            for (i,product) in self.model.enumerated() {
+                if self.selected[i] == true {
+                    try! self.realm.write() {
+                        product.date = NSDate()
+                        product.status = stat
+                        self.realm.add(product)
+                    }
+                }
+            }
+            self.searchProductData()
+            self.collectionView.reloadData()
+            self.sumPrice.text = String(self.sum) + "0 p."
+        })
+        alert.addAction(UIAlertAction(title: "Отмена", style: UIAlertAction.Style.cancel, handler: nil))
+        alert.addAction(actionUpgrade)
+        self.present(alert, animated: true, completion: nil)
     }
     // MARK: - Constants
     private enum Constants {
@@ -50,6 +92,70 @@ class CartViewController: UIViewController {
         searchProductData()
         collectionView.reloadData()
         sumPrice.text = String(sum) + "0 p."
+        refreshControl.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
+        self.collectionView.addSubview(refreshControl)
+        self.collectionView.alwaysBounceVertical = true
+        NotificationCenter.default.addObserver(self, selector: #selector(reprice), name: NSNotification.Name("rePrice"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(cangeSelect), name: NSNotification.Name("cangeSelect"), object: nil)
+        sumPrice.text = String(sum) + "0 p."
+    }
+    
+    @objc func cangeSelect(notification: NSNotification){
+        if let dict = notification.object
+         as? NSDictionary{
+            if let select = dict["select"] as? Bool {
+                if select {
+                    if let price = dict["price"] as? Double {
+                        sum = sum + price
+                    }
+                    if let product = dict["product"] as? Purchase {
+                        var i = 0
+                        for prod in model {
+                            if prod == product {
+                                selected[i] = true
+                            }
+                            i+=1
+                        }
+                    }
+                }
+                else {
+                     if let price = dict["price"] as? Double {
+                         sum = sum - price
+                     }
+                     if let product = dict["product"] as? Purchase {
+                        var i = 0
+                        for prod in model {
+                            if prod == product {
+                                selected[i] = false
+                            }
+                            i+=1
+                        }
+                     }
+                }
+            }
+            sumPrice.text = String(sum) + "0 р."
+            if selected.contains(false){
+                //print(selected)
+                isAllSelected = false
+                selectButton.setImage(UIImage(named: "nSelected"), for: .normal)
+            } else {
+                isAllSelected = true
+                selectButton.setImage(UIImage(named: "selected"), for: .normal)
+            }
+        }
+    }
+    
+    @objc func reprice(notification: NSNotification) {
+        if let dict = notification.object
+         as? NSDictionary{
+            if let price = dict["price"] as? Double{
+                sum = sum + price
+            }
+            sumPrice.text = String(sum) + "0 р."
+        }
+        
+        //collectionView.reloadData()
+        
     }
    
 }
@@ -57,13 +163,30 @@ class CartViewController: UIViewController {
 // MARK: - Private Methods
 private extension CartViewController {
 
+    
+    @objc func refresh(_sender: AnyObject){
+        self.searchProductData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+            print("refresh data")
+            }
+        self.refreshControl.endRefreshing()
+        sum = 0.0
+        self.collectionView.reloadData()
+        isAllSelected = true
+        selectButton.setImage(UIImage(named: "selected"), for: .normal)
+        }
+        
+    
     func searchProductData(){
         let products =  self.realm.objects(Purchase.self)
-       
+        model = []
+        selected = []
         for product in products {
             if product.user.login == currentUser.login && product.status.statusName == currentStatus.statusName {
                 model.append(product)
+                selected.append(true)
                 sum = sum + product.price*Double(product.count)
+                
             }
         }
     }
@@ -114,8 +237,14 @@ extension CartViewController: UICollectionViewDataSource, UICollectionViewDelega
             cell.titleText = item.product.productTitle
             cell.imageUrlInString = item.product.productPictureUrl
             //cell.imageUrlInString = item.imageUrlInString
-            cell.select = isAllSelected
-            
+//            if isAllSelected {
+//                cell.select = isAllSelected
+//                selected[indexPath.row] = true
+//            }
+            cell.select = selected[indexPath.row]
+            cell.productData = item
+//            sum = sum + item.price*Double(item.count)
+//            sumPrice.text = String(sum) + "0 p."
             }
         return cell
     }

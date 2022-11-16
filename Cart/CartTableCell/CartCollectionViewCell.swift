@@ -6,9 +6,10 @@
 //
 
 import UIKit
-
+import RealmSwift
 class CartCollectionViewCell: UICollectionViewCell {
 
+    let realm = try! Realm()
     @IBOutlet weak var selectedButton: UIButton!
     @IBOutlet weak var imageInUrl: UIImageView!
     private var isSelect: Bool = false
@@ -18,7 +19,7 @@ class CartCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var titleLabel: UILabel!
 
     @IBOutlet weak var priceLabel: UILabel!
-    
+    private var product: Purchase!
     
     @IBAction func selectedButtonTouch(_ sender: Any) {
         isSelect = !isSelect
@@ -28,19 +29,29 @@ class CartCollectionViewCell: UICollectionViewCell {
         else {
             selectedButton.setImage(UIImage(named: "nSelected"), for: .normal)
         }
-        
+        NotificationCenter.default.post(name: NSNotification.Name("cangeSelect"), object: ["price": price*Double(count),"product": product as Any ,"select": isSelect]  )
     }
     
     @IBAction func plusButtonTouch(_ sender: Any) {
         count = count + 1
         countLabel.text = String(count)
         priceLabel.text = String(price*Double(count)) + "0 р."
+        try! realm.write() {
+            self.product.count += 1
+            self.realm.add(self.product)
+        }
+        NotificationCenter.default.post(name: NSNotification.Name("rePrice"), object: ["price": price])
     }
     @IBAction func minusButtonTouch(_ sender: Any) {
         if count > 1 {
             count = count - 1
             countLabel.text = String(count)
             priceLabel.text = String(price*Double(count)) + "0 р."
+            try! realm.write() {
+                self.product.count -= 1
+                self.realm.add(self.product)
+            }
+            NotificationCenter.default.post(name: NSNotification.Name("rePrice"), object: ["price": -1*price])
         }
     }
     
@@ -83,11 +94,19 @@ class CartCollectionViewCell: UICollectionViewCell {
             countLabel.text = String(count)
         }
     }
+    var productData: Purchase = Purchase(){
+        didSet {
+            product = productData
+        }
+    }
     override func awakeFromNib() {
         super.awakeFromNib()
         configureApperance()
+        
     }
-
+    func isProductSelect() -> Bool {
+        return isSelect
+    }
 
 
 }

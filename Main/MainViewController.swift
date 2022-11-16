@@ -15,7 +15,7 @@ class MainViewController: UIViewController {
         static let spaceBetweenElements: CGFloat = 7
         static let spaceBetweenRows: CGFloat = 8
     }
-    
+    let refreshControl = UIRefreshControl()
     @IBOutlet weak var collectionView: UICollectionView!
     private let model: MainModel = .init()
     
@@ -56,6 +56,8 @@ private extension MainViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.contentInset = .init(top: 10, left: 16, bottom: 10, right: 16)
+        refreshControl.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
+        self.collectionView.addSubview(refreshControl)
     }
 
     func configureModel() {
@@ -64,6 +66,14 @@ private extension MainViewController {
                 self?.collectionView.reloadData()
             }
         }
+    }
+    @objc func refresh(_sender: AnyObject){
+        model.loadPosts()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+            print("refresh data")
+            }
+        self.refreshControl.endRefreshing()
+        collectionView.reloadData()
     }
     
 }
@@ -101,17 +111,7 @@ extension MainViewController: UICollectionViewDataSource, UICollectionViewDelega
         return Constants.spaceBetweenElements
     }
     
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        navigationController?.pushViewController(DetailViewController(), animated: true)
-//    }
-    
-    
-    /*
-     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-     super.prepare(for: segue, sender: sender)
-     switch segue.identifier = ""
-     let vc = segue.destination as? MainViewController
-     */
+
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let vc = DetailViewController()

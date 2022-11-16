@@ -12,6 +12,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     var currentProduct = Product()
     var currentStatus = OrderStatus()
     var productInCart = Purchase()
+    lazy var users: Results<User> = { self.realm.objects(User.self) }()
     // MARK: - Views
     
     @IBOutlet weak var tableView: UITableView!
@@ -27,29 +28,51 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
         tableView.reloadData()
         searchProductData()
         searchStatus()
-        addToCartButton.titleLabel?.text = "Добавить в корзину"
+        if isAdmin() {
+            addToCartButton.titleLabel?.text = "Удалить товар"
+        } else {
+            addToCartButton.titleLabel?.text = "Добавить в корзину"
+        }
+        NotificationCenter.default.addObserver(self, selector: #selector(searchForSelected), name: NSNotification.Name("searchForSelected"), object: nil)
     }
 
     @IBAction func addToCart(_ sender: Any) {
-        if checkInCart() {
-            
-            
-            try! realm.write() {
-               // prod.count = 1
-                self.productInCart.count += 1
-                self.realm.add(self.productInCart)
-                addToCartButton.setTitle("В корзине \(productInCart.count) шт.", for: .normal)
+        if isAdmin(){
+            let alert = UIAlertController(title: "Удалить", message: "Вы действительно хотите удалить товар?", preferredStyle: UIAlertController.Style.alert)
+            let actionUpgrade = UIAlertAction.init(title: "Да", style: .default, handler: { action in
+                self.realm.beginWrite()
+                self.realm.delete(self.currentProduct)
+                do {
+                    try! self.realm.commitWrite()
+                    let alert2 = UIAlertController(title: "Успешно", message: "Товар успешно удален из базы", preferredStyle: UIAlertController.Style.alert)
+                    alert2.addAction(UIAlertAction(title: "Ок", style: UIAlertAction.Style.cancel, handler: nil))
+                    self.present(alert2, animated: true, completion: nil)
+                }
+            })
+            alert.addAction(UIAlertAction(title: "Отмена", style: UIAlertAction.Style.cancel, handler: nil))
+            alert.addAction(actionUpgrade)
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            if checkInCart() {
+                
+                
+                try! realm.write() {
+                    // prod.count = 1
+                    self.productInCart.count += 1
+                    self.realm.add(self.productInCart)
+                    addToCartButton.setTitle("В корзине \(productInCart.count) шт.", for: .normal)
+                }
             }
-        }
-        else {
-            try! realm.write() {
-                let product =  Purchase(value:[currentProduct,currentUser,currentStatus,1,currentProduct.productPrice,NSDate()])
-                self.realm.add(product)
-                let alert = UIAlertController(title: "Супер!", message: "Товар успешно добавлен в вашу корзину!", preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "ОК", style: UIAlertAction.Style.default, handler: nil))
-                self.present(alert, animated: true, completion: nil)
-                addToCartButton.setTitle("В корзине 1 шт.", for: .normal)
-                addToCartButton.backgroundColor = .gray
+            else {
+                try! realm.write() {
+                    let product =  Purchase(value:[currentProduct,currentUser,currentStatus,1,currentProduct.productPrice,NSDate()])
+                    self.realm.add(product)
+                    let alert = UIAlertController(title: "Супер!", message: "Товар успешно добавлен в вашу корзину!", preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "ОК", style: UIAlertAction.Style.default, handler: nil))
+                    self.present(alert, animated: true, completion: nil)
+                    addToCartButton.setTitle("В корзине 1 шт.", for: .normal)
+                    addToCartButton.backgroundColor = .gray
+                }
             }
         }
     }
@@ -57,12 +80,41 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewWillAppear(animated)
         configureNavigationBar()
     }
+   
+    @objc func searchForSelected(notification: NSNotification) {
+        if let dict = notification.object
+         as? NSDictionary{
+            if let selectedString = dict["str"] as? String{
+                let vc = SearchViewController()
+                vc.setSelectedString(str: selectedString)
+                navigationController?.pushViewController(vc, animated: true)
+            }
+            
+        }
+        
+        //collectionView.reloadData()
+        
+    }
     
     @objc func searchButtonTapped(){
         let vc = SearchViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
-
+    @objc func editButtonTapped(){
+        let vc = ProductAddingViewController()
+        vc.editProduct(productKey: model.productKey, info: model.info, title: model.title, newCategory: model.category, newProvider: model.provider, pictUrl: model.imageUrlInString, NewPrice: model.price)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    func isAdmin() -> Bool {
+        let tmpLogin = UserSettings.userName ?? " "
+        let tmpPassword = UserSettings.password ?? " "
+        for user in self.users {
+            if user.login == tmpLogin && user.password == tmpPassword && user.role == "admin" {
+               return true
+            }
+        }
+        return false
+    }
 }
 
 // MARK: - Private Methods
@@ -109,25 +161,25 @@ private extension DetailViewController {
                                          action: #selector(UINavigationController.popViewController(animated:)))
         navigationItem.leftBarButtonItem = backButton
         navigationItem.leftBarButtonItem?.tintColor = .black
-        
-        let searchButton = UIBarButtonItem(image:resizeImage(image: UIImage(named: "search")!, targetSize: CGSize.init(width: 32, height: 32)),
-                                         style: .plain, target: self,
-                                           action: #selector(self.searchButtonTapped))
-        navigationItem.rightBarButtonItem = searchButton
-        navigationItem.rightBarButtonItem?.tintColor = .black
+        if isAdmin() {
+            let editButton = UIBarButtonItem(image:resizeImage(image: UIImage(named: "edit")!, targetSize: CGSize.init(width: 32, height: 32)),
+                                               style: .plain, target: self,
+                                               action: #selector(self.editButtonTapped))
+            navigationItem.rightBarButtonItem = editButton
+            navigationItem.rightBarButtonItem?.tintColor = .black
+        } else {
+            let searchButton = UIBarButtonItem(image:resizeImage(image: UIImage(named: "search")!, targetSize: CGSize.init(width: 32, height: 32)),
+                                               style: .plain, target: self,
+                                               action: #selector(self.searchButtonTapped))
+            navigationItem.rightBarButtonItem = searchButton
+            navigationItem.rightBarButtonItem?.tintColor = .black
+        }
         
         navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
 
     func configureTableView() {
-//        view.addSubview(tableView)
-//        tableView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            tableView.leftAnchor.constraint(equalTo: view.leftAnchor),
-//            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-//            tableView.rightAnchor.constraint(equalTo: view.rightAnchor),
-//            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-//        ])
+
 
         tableView.register(UINib(nibName: "\(ImageDetailTableViewCell.self)", bundle: .main),
                            forCellReuseIdentifier: "\(ImageDetailTableViewCell.self)")
@@ -204,5 +256,5 @@ extension DetailViewController: UITableViewDataSource {
             return UITableViewCell()
         }
     }
-
+    
 }

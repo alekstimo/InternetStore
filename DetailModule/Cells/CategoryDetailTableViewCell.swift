@@ -11,11 +11,12 @@ class CategoryDetailTableViewCell: UITableViewCell {
 
     @IBOutlet weak var categoryButton: UIButton!
     @IBOutlet weak var textCategoryLabel: UILabel!
-    
+    private var categoryName = ""
     //MARK: - Properties
     var category: String = "" {
         didSet {
-            categoryButton.setTitle(category + " >", for: .normal) 
+            categoryButton.setTitle(category + " >", for: .normal)
+            categoryName = category
         }
     }
     override func awakeFromNib() {
@@ -25,6 +26,8 @@ class CategoryDetailTableViewCell: UITableViewCell {
 
     @IBAction func categoryButtonPushed(_ sender: Any) {
         print("Category view!")
+        NotificationCenter.default.post(name: NSNotification.Name("searchForSelected"), object: ["str": categoryName])
+            
     }
     private func configureApperance() {
         selectionStyle = .none
