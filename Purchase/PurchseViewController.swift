@@ -11,6 +11,7 @@ import RealmSwift
 struct ShortPurchase {
     var date = NSDate()
     var sum = 0.0
+    var user = User()
 }
 
 class PurchseViewController: UIViewController {
@@ -38,27 +39,42 @@ class PurchseViewController: UIViewController {
     func configureModel() {
         
         let purcahes =  self.realm.objects(Purchase.self)
-        let tmpLogin = UserSettings.userName ?? " "
-        //let tmpPassword = UserSettings.password ?? " "
-        for purcahe in purcahes {
-            if tmpLogin == purcahe.user.login && purcahe.status.statusName != "InCart"{
-                if array.isEmpty {
-                    array.append(ShortPurchase(date:  purcahe.date, sum: purcahe.price))
-                } else {
-                    addToArray(date: purcahe.date, sum: purcahe.price)
+       
+        
+        guard currentUser.role == "admin"  else {
+            let tmpLogin = UserSettings.userName ?? " "
+            for purcahe in purcahes {
+                if tmpLogin == purcahe.user.login  && purcahe.status.statusName != "InCart"{
+                    if array.isEmpty {
+                        array.append(ShortPurchase(date:  purcahe.date, sum: purcahe.price * Double(purcahe.count), user: purcahe.user))
+                    } else {
+                        addToArray(date: purcahe.date, sum: purcahe.price,count: purcahe.count, user: purcahe.user)
+                    }
                 }
             }
+            return
+        }
+        for purcahe in purcahes {
+            if purcahe.status.statusName != "InCart" {
+                if array.isEmpty {
+                    array.append(ShortPurchase(date:  purcahe.date, sum: purcahe.price * Double(purcahe.count), user: purcahe.user))
+                } else {
+                    addToArray(date: purcahe.date, sum: purcahe.price,count: purcahe.count, user: purcahe.user)
+                }
+            }
+            
         }
         
+        
     }
-    func addToArray(date: NSDate, sum: Double){
+    func addToArray(date: NSDate, sum: Double, count: Int, user: User){
         for (i, elem) in array.enumerated() {
-            if convertDate(date: elem.date) == convertDate(date: date) {
-                array[i].sum = array[i].sum + sum
+            if convertDate(date: elem.date) == convertDate(date: date) && elem.user.login == user.login {
+                array[i].sum = array[i].sum + sum * Double(count)
                 return
             }
         }
-        array.append(ShortPurchase(date: date, sum: sum))
+        array.append(ShortPurchase(date: date, sum: sum * Double(count), user: user))
     }
     func convertDate(date: NSDate) ->String {
         let dateFormater = DateFormatter()
@@ -137,7 +153,7 @@ extension PurchseViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Select")
         let vc = PurchaseDetailViewController()
-        vc.setDate(currentDate: array[indexPath.row].date)
+        vc.setData(currentDate: array[indexPath.row].date,currentUser: array[indexPath.row].user)
         navigationController?.pushViewController(vc, animated: true)
     }
 

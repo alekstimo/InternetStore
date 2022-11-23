@@ -23,6 +23,7 @@ class DetailPurchaseTableViewCell: UITableViewCell {
         // Initialization code
     }
     
+    
     var imageUrlInString: String = "" {
            didSet {
                guard let url = URL(string: imageUrlInString) else {
@@ -35,8 +36,8 @@ class DetailPurchaseTableViewCell: UITableViewCell {
     
     var priceText: Double = 1.0 {
         didSet {
-            print(count)
-            print(priceText*Double(count))
+//            print(count)
+//            print(priceText*Double(count))
             priceTextLabel.text = "Цена: " + String(priceText*Double(count)) + "0 р."
         }
 

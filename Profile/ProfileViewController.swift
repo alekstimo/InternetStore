@@ -11,7 +11,8 @@ class ProfileViewController: UIViewController {
     let realm = try! Realm()
     private var user = User()
     let popVC =  OptionsTableViewController()
-    
+    let refreshControl = UIRefreshControl()
+    @IBOutlet weak var exitButton: UIButton!
     // MARK: - Views
     
     @IBOutlet weak var tableView: UITableView!
@@ -20,7 +21,11 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         configureAppearance()
         NotificationCenter.default.addObserver(self, selector: #selector(purchaseTapped), name: NSNotification.Name("purchaseTapped"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(editProfileTapped), name: NSNotification.Name("editProfileTapped"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(editPasswordTapped), name: NSNotification.Name("editPasswordTapped"), object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(deleteAccount), name: NSNotification.Name("deleteAccount"), object: nil)
         
+        tableView.reloadData()
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -42,7 +47,30 @@ class ProfileViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
         popVC.dismiss(animated: false)
     }
-    
+    @objc func deleteAccount(){
+        UserSettings.userName = ""
+        UserSettings.password = ""
+        self.realm.beginWrite()
+        self.realm.delete(currentUser)
+        do {
+            try! self.realm.commitWrite()
+        }
+        currentUser = User()
+        let appDelegate  = UIApplication.shared.delegate as! AppDelegate
+        let vc = TabBarUserConfigurator().configure()
+        appDelegate.window?.rootViewController = vc
+    }
+    @objc func editProfileTapped(){
+        let vc = EditProfileViewController()
+        navigationController?.pushViewController(vc, animated: true)
+        popVC.dismiss(animated: false)
+        
+    }
+    @objc func editPasswordTapped(){
+        let vc = EditPasswordViewController()
+        navigationController?.pushViewController(vc, animated: true)
+        popVC.dismiss(animated: false)
+    }
 }
 
 // MARK: - Private Methods
@@ -77,8 +105,19 @@ private extension ProfileViewController {
         }
     }
     
+    @objc func refresh(_sender: AnyObject){
+        searchUserData()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2){
+            print("refresh data")
+            }
+        self.refreshControl.endRefreshing()
+        tableView.reloadData()
+    }
     func configureAppearance() {
         configureTableView()
+        exitButton.layer.cornerRadius = 12
+        refreshControl.addTarget(self, action: #selector(self.refresh), for: .valueChanged)
+        self.tableView.addSubview(refreshControl)
     }
 
     func configureNavigationBar() {

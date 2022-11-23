@@ -44,7 +44,6 @@ class ProductAddingViewController: UIViewController {
                                            selectedCategory(),
                                            selectedProvider(),
                                            Double(price.text!)!])
-             let cat = selectedCategory()
              self.realm.add(product)
             }
         } //TODO: CATCH Not add

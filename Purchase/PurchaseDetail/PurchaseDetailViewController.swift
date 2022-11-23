@@ -8,22 +8,56 @@
 import UIKit
 import RealmSwift
 
-class PurchaseDetailViewController: UIViewController {
+class PurchaseDetailViewController: UIViewController{
 
+    @IBOutlet weak var statusButton: UIButton!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var sumTextLabel: UILabel!
     @IBOutlet weak var statusTextLabel: UILabel!
     @IBOutlet weak var dateTextLabel: UILabel!
+    @IBOutlet weak var userTextLabel: UILabel!
     var array = [Purchase]()
     let realm = try! Realm()
     var date = NSDate()
     var sum = 0.0
+    var user = User()
+    let popVcStatus = PopOverStatus()
+    
+    
+    @IBAction func statusButtonTapped(_ sender: Any) {
+        guard currentUser.role == "admin" else { return }
+        popVcStatus.modalPresentationStyle = .popover
+        let popOverVc = popVcStatus.popoverPresentationController
+        popOverVc?.delegate = self
+        popOverVc?.sourceView = self.statusButton
+        popOverVc?.sourceRect = CGRect(x: self.statusButton.bounds.midX , y: self.statusButton.bounds.maxY, width: 0, height: 0)
+        popVcStatus.preferredContentSize = CGSize(width: 250, height: 250)
+        self.present(popVcStatus, animated: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureModel()
         configureAppearance()
         
+        NotificationCenter.default.addObserver(self, selector: #selector(statusSelected), name: NSNotification.Name("statusSelected"), object: nil)
+    }
+    @objc func statusSelected(notification: NSNotification) {
+        if let dict = notification.object
+         as? NSDictionary{
+            if let status = dict["status"] as? String{
+                statusButton.setTitle(currentStatus(status: status), for: .normal)
+                for elem in array {
+                    try! realm.write() {
+                        elem.status.statusName = status
+                        self.realm.add(elem)
+                    }
+                    
+                }
+            }
+        }
+        
+        //collectionView.reloadData()
         
     }
     override func viewWillAppear(_ animated: Bool) {
@@ -32,19 +66,19 @@ class PurchaseDetailViewController: UIViewController {
         
         //searchUserData()
     }
-    func setDate(currentDate: NSDate) {
+    func setData(currentDate: NSDate, currentUser: User) {
         date = currentDate
+        user = currentUser
     }
    
     func configureModel() {
         
         let purcahes =  self.realm.objects(Purchase.self)
-        let tmpLogin = UserSettings.userName ?? " "
-        //let tmpPassword = UserSettings.password ?? " "
+       
         for purcahe in purcahes {
-            if tmpLogin == purcahe.user.login && purcahe.status.statusName != "InCart" && convertDate(date:purcahe.date) == convertDate(date:date){
+            if user.login == purcahe.user.login && purcahe.status.statusName != "InCart" && convertDate(date:purcahe.date) == convertDate(date:date){
                 array.append(purcahe)
-                sum += purcahe.price
+                sum += purcahe.price * Double(purcahe.count)
             }
         }
         
@@ -58,6 +92,12 @@ class PurchaseDetailViewController: UIViewController {
    
     
 }
+extension PurchaseDetailViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
+}
+
 
 // MARK: - Private Methods
 private extension PurchaseDetailViewController {
@@ -77,18 +117,30 @@ private extension PurchaseDetailViewController {
     
     func configureAppearance() {
         configureTableView()
+        userTextLabel.text = "Покупатель: " + user.login
+        userTextLabel.font = .systemFont(ofSize: 15)
+        
         dateTextLabel.text = "Заказ от " + convertDate(date: date)
         dateTextLabel.font = .systemFont(ofSize: 15)
         
         sumTextLabel.text = "Сумма " + String(sum) + "0 p."
         sumTextLabel.font = .systemFont(ofSize: 15)
         
-        statusTextLabel.text = "Статус заказа: " + currentStatus()
+        statusTextLabel.text = "Статус заказа: "
         statusTextLabel.font = .systemFont(ofSize: 15)
+        
+        statusButton.setTitle(currentStatus(status: array[0].status.statusName), for: .normal)
+        //statusButton.titleLabel?.text = currentStatus(status: array[0].status.statusName)
+        statusButton.titleLabel?.font = .systemFont(ofSize: 15)
+        
+        if currentUser.role != "admin" {
+            statusButton.isEnabled = false
+            statusButton.setTitleColor(.black, for: .disabled)
+        }
     }
-    func currentStatus() -> String {
+    func currentStatus(status: String) -> String {
         guard !array.isEmpty else {return " "}
-        switch array[0].status.statusName {
+        switch status {
         case "Framed":
             return "Зарегистрирован"
         case "InDelivery":

@@ -53,26 +53,32 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
             alert.addAction(actionUpgrade)
             self.present(alert, animated: true, completion: nil)
         } else {
-            if checkInCart() {
-                
-                
-                try! realm.write() {
-                    // prod.count = 1
-                    self.productInCart.count += 1
-                    self.realm.add(self.productInCart)
-                    addToCartButton.setTitle("В корзине \(productInCart.count) шт.", for: .normal)
+            if !UserSettings.userName!.isEmpty {
+                if checkInCart() {
+                    
+                    
+                    try! realm.write() {
+                        // prod.count = 1
+                        self.productInCart.count += 1
+                        self.realm.add(self.productInCart)
+                        addToCartButton.setTitle("В корзине \(productInCart.count) шт.", for: .normal)
+                    }
                 }
-            }
-            else {
-                try! realm.write() {
-                    let product =  Purchase(value:[currentProduct,currentUser,currentStatus,1,currentProduct.productPrice,NSDate()])
-                    self.realm.add(product)
-                    let alert = UIAlertController(title: "Супер!", message: "Товар успешно добавлен в вашу корзину!", preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "ОК", style: UIAlertAction.Style.default, handler: nil))
-                    self.present(alert, animated: true, completion: nil)
-                    addToCartButton.setTitle("В корзине 1 шт.", for: .normal)
-                    addToCartButton.backgroundColor = .gray
+                else {
+                    try! realm.write() {
+                        let product =  Purchase(value:[currentProduct,currentUser,currentStatus,1,currentProduct.productPrice,NSDate()])
+                        self.realm.add(product)
+                        let alert = UIAlertController(title: "Супер!", message: "Товар успешно добавлен в вашу корзину!", preferredStyle: UIAlertController.Style.alert)
+                        alert.addAction(UIAlertAction(title: "ОК", style: UIAlertAction.Style.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                        addToCartButton.setTitle("В корзине 1 шт.", for: .normal)
+                        addToCartButton.backgroundColor = .gray
+                    }
                 }
+            } else {
+                let alert = UIAlertController(title: "Печалька!", message: "Вы не зарегистрированы в системе(", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "ОК", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }
@@ -151,6 +157,7 @@ private extension DetailViewController {
     }
     func configureAppearance() {
         configureTableView()
+        addToCartButton.layer.cornerRadius = 12
     }
 
     func configureNavigationBar() {

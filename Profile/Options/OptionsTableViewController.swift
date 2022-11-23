@@ -11,7 +11,7 @@ class OptionsTableViewController: UITableViewController {
         
     
     
-    let options = ["Заказы","Изменить профиль"]
+    let options = ["Заказы","Изменить профиль","Изменить пароль","Удалить аккаунт"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +49,26 @@ class OptionsTableViewController: UITableViewController {
             NotificationCenter.default.post(name: NSNotification.Name("purchaseTapped"),object: nil)
             break
         case 1:
-            print("Изменить")
+            //print("Изменить")
+            NotificationCenter.default.post(name: NSNotification.Name("editProfileTapped"),object: nil)
+            break
+        case 2:
+            NotificationCenter.default.post(name: NSNotification.Name("editPasswordTapped"),object: nil)
+            break
+        case 3:
+            let alert = UIAlertController(title: "Внимание!", message: "Вы уверены что хотите удалить аккаунт? ", preferredStyle: UIAlertController.Style.alert)
+            let actionUpgrade = UIAlertAction.init(title: "Да", style: .default, handler: { action in
+                guard currentUser.role == "admin" else {
+                    NotificationCenter.default.post(name: NSNotification.Name("deleteAccount"),object: nil)
+                    return
+                }
+                let alert = UIAlertController(title: ":)", message: "Вы не можете удалить свой аккаун", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            })
+            alert.addAction(actionUpgrade)
+            alert.addAction(UIAlertAction(title: "Отмена", style: UIAlertAction.Style.cancel, handler: nil))
+            self.present(alert, animated: true, completion: nil)
             break
         default:
             print("Err")
