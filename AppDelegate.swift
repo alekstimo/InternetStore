@@ -47,6 +47,7 @@ lazy var users: Results<User> = { self.realm.objects(User.self) }()
         DispatchQueue.main.async {
             let tmpLogin = UserSettings.userName ?? " "
             let tmpPassword = UserSettings.password ?? " "
+            print(Realm.Configuration.defaultConfiguration.fileURL)
             for user in self.users {
                 if user.login == tmpLogin && user.password == tmpPassword {
                     currentUser = user

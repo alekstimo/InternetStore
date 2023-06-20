@@ -67,6 +67,7 @@ class ProductAddingViewController: UIViewController {
                     
                     self.realm.add(product)
                     let alert = UIAlertController(title: "Супер!", message: "Товар успешно добавлен в базу!", preferredStyle: UIAlertController.Style.alert)
+                    
                     alert.addAction(UIAlertAction(title: "ОК", style: UIAlertAction.Style.default, handler: nil))
                     self.present(alert, animated: true, completion: nil)
                 }

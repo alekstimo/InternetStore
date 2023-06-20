@@ -124,7 +124,6 @@ class LaunchViewController: UIViewController, UITextFieldDelegate {
                             appDelegate.window?.rootViewController = vc
                         }
                     }
-                    //TODO: ВСПЛЫВ ОШИБКИ
                     passwordTextField.isError(baseColor: UIColor.gray.cgColor)
                     loginTextField.isError(baseColor: UIColor.gray.cgColor)
                 }
